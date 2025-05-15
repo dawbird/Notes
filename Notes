@@ -1,0 +1,173 @@
+Windows Registry
+
+HKEY_Local_Machine (HIVE)
+              ├──SOFTWARE (Key)
+              ├──BCD00000 (Key)
+              ├──HARDWARE (Key)
+              └──SYSTEM   (Key)
+                      └──RegisteredApplications (Subkey)
+                                        ├── File Explorer : Data (value)
+                                        ├── Paint : Data (value)
+                                        └──Wordpad : Data (value)
+
+There are five Registry Hives
+
+HKEY_LOCAL_MACHINE *
+	System Configurations, Run on start up etc.
+		HARDWARE - contains a database of installed devices along with their drivers
+	
+		SAM - Security Account Manager stores user and group accounts along with NTLM hashes of passwords
+
+		Security - Local Security policy accessed by lsass.exe used to determine rights and permissions for users on the machine
+
+		System - Contains keys pertaining to system startup such as programs started on boot or driver load order.
+
+HKEY_USERS *
+	User profile information, one key per user, keys named after SID's.			
+		User Environment settings for the desktop				
+
+		Shortcuts
+
+		File associations			
+SIDS
+	S-1-5-18 refers to LocalSystem account.
+
+	S-1-5-19 refers to LocalService account. It is used to run local services that do not require LocalSystem account.
+
+	S-1-5-20 refers to NetworkService account. It is used to run network services that do not require LocalSystem account.
+
+	S-1-5-21-domain-500 Refers to the built in local administrator account.
+	500 = Admin, 501 = Guest, Start of created users = 1000
+
+HKEY_CURRENT_USER
+	Uses pointers or shortcut to HKU by the SID
+
+
+HKEY_CURRENT_CONFIG
+	Current set up of HKLM 
+
+
+HKEY_CLASSES_ROOT
+
+Registry Path Hive and Supporting Files
+HKLM\SAM SAM, SAM.LOG
+
+HKLM\SECURITY SECURITY, SECURITY.LOG
+
+HKLM\SOFTWARE software, software.LOG, software.sav
+
+HKLM\SYSTEM system, system.LOG, system.sav
+
+HKLM\HARDWARE (Dynamic/Volatile Hive)
+
+HKU\.DEFAULT default, default.LOG, default.sav 
+
+HKU\SID NTUSER.DAT **
+
+HKU\SID_CLASSES UsrClass.dat, UsrClass.dat.LOG
+	
+PWSH Access to registry
+	cd REGISTRY::<Key/Hive>
+
+3 PWSH COMMANDS TO KNOW
+get-item (Shows values inside of keys)
+get-childitem (Shows subkeys)
+get-itemproperty 
+
+net use * http://live.sysinternals.com
+
+Registry locations that can be utilized for persistence
+
+	HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+
+	HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+	HKU\<SID>\Software\Microsoft\Windows\CurrentVersion\Run
+
+	HKU\<SID>\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+	HKLM\SYSTEM\CurrentControlSet\services
+
+	HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders
+
+	HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+
+	HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+
+
+Windows Alternate Data Streams
+
+ query ADS
+	CMD: more <, dir /R
+	PWSH: Get-Item reminder.txt -Stream * (See if there IS a stream), Get-Content ./test.txt -Stream secret.vbs (See what it actually is)
+
+
+Windows Boot Process
+
+winload.exe = BIOS, winload.efi = UEFI
+
+CMD
+bcdedit
+
+Windows System Initialization 
+	
+	Loading the Operating System Kernel
+
+	Initializing the Kernel
+
+	Starting Subsystems
+
+	Starting Session 0
+
+	Starting Session 1
+
+Ntoskrnl.exe
+	Loads the Windows Registry
+
+	Loads device drivers
+
+	Starts the system pagefile located at C:\pagefile.sys
+
+	Loads hal.dll
+
+		hal.dll provides abstraction between hardware interfaces and Ntoskrnl.exe
+
+System always has PID of 4
+
+smss.exe
+	Loads environmental variables like %APPDATA% and %COMPUTERNAME%
+
+	Populates the pagefile located in C:\pagefile.sys
+
+	Starts the kernel and user mode sub systems.
+
+	Starts a csrss.exe to manage processes and threads for each User Subsystem.
+
+
+Session 0
+	smss.exe installs the Win32 subsystem kernel and user mode components (win32k.sys - kernel; winsrv.dll - user; and csrss.exe - user.)
+
+	csrss.exe - The Client/Server Runtime Subsystem supports process / thread creation and management.
+
+	wininit.exe marks itself as critical, initializes the Windows temp directory, loads the rest of the registry, and starts user mode 	scheduling. It also installs programs that require a reboot to finish the install process. It also starts:
+
+	lsm.exe - the Local Session Manager (LSM) handles all sessions of a system (both remote desktop sessions and local system sessions.)
+
+	lsass.exe - the Local Security Authority Subsystem (LSASS) provides user authentication services, manages the local security policy, and 	generates access tokens.
+
+	services.exe the Services Control Manager (SCM) loads AutoStart services, using LSASS to authenticate if they run as something other 	than System.
+
+	wininit.exe then waits for system shutdown to undo everything it started.
+
+Session 1
+	Spawn a Session 1 ( or higher) csrss.exe
+
+	Spawn Winlogon.exe which by default prompts for credentials with logonui.exe
+
+	Spawn userinit.exe which creates an account token and creates a custom environment
+
+	Spawn explorer.exe as the customized graphical environment.
+
+
+bcdedit /deletevalue {current} safeboot (1. Deletes Safeboot value)
+bcdedit /set {bootmgr} timeout 29 (2. Changes Timeout value)
