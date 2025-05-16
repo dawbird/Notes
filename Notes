@@ -171,3 +171,105 @@ Session 1
 
 bcdedit /deletevalue {current} safeboot (1. Deletes Safeboot value)
 bcdedit /set {bootmgr} timeout 29 (2. Changes Timeout value)
+
+Linux Boot Process
+
+Master Boot Record Layout
+
+	The first 512 bytes of a hard drive contains the Master Boot Record. It contains the following information:
+
+	Bootstrap Code
+
+	Partition entry 1 (16 bytes each partition) 
+
+	Partition entry 2
+	
+	Partition entry 3
+
+	Partition entry 4
+
+	Boot signature
+
+COMMANDS FOR READING MBR
+	xxd
+	dd
+	EX: lsblk, sudo xxd -l 512 -g 1 /dev/vda, dd if=/dev/vda of=MBRcopy bs=512 count=1
+GPT (GUID Partition Tables)
+	GPT Only works with UEFI Firmware
+
+	GPT has many boot sectors stored around the disk as redundancy so an issue in one will not deadline the entire machine
+
+	GPT supports 128(and more depending on Operating System) separate physical partitions, while MBR supports only 4
+
+	GPT Supports partitions up to 9 zettabytes. Which is ridiculous.
+
+First Stage Boot Loaders
+	MBR and GPT
+
+Second Stage Boot Loader: GRUB
+	On BIOS Systems using MBR
+		Stage 1 : boot.img located in the first 440 bytes of the MBR loads…​
+
+		Stage 1.5 : core.img located in the MBR between the bootstrap and first partition. It loads…​
+
+		Stage 2 : /boot/grub/i386-pc/normal.mod which loads the grub menu and then reads
+
+		/boot/grub/grub.cfg Which displays a list of Linux kernels available to load on the system
+
+	On UEFI Systems using GPT
+		Stage 1 : grubx64.efi Located on an EFI partition or in /boot loads…​
+
+		Stage 2 : /boot/grub/x86_64-efi/normal.mod
+
+		/boot/grub/grub.cfg Which displays a list of Linux kernels available to load on the system
+
+		GRUB 2 Chain Loading Process Resource 1	
+
+Kernel
+	Heart of the OS
+
+	Monolithic Kernel
+		System calls all functionality to the user such as CPU scheduling, memory management, and file management. A systemcall is a way in which a program requests services from the kernel. Everything that occurs on the system occurs through a systemcall
+	
+	Witness a system call command: ltrace -S cat /etc/passwd
+
+	 
+	Modular
+		Modules are extensions to base functionality of the Linux Operating System. This modularity allows for modifications baseline system functionality without rebuilding the kernel and failures will not stop the machine from starting.
+
+Init
+	The kernel, once loaded, is hard coded to reach out and execute /sbin/init. This starts the process of bringing the system to a desired level of functionality using Initialization Daemons. There are two main initialization daemons now : Systemd and SysV.	
+
+		Run Levels
+			0 Halt
+			1 Single User
+			2 Multi-User
+			3 Multi-User with Netowrking
+			4 Not used/user-definable
+			5 Multi-User, Networking with a GUI
+			6 Reboot
+
+	/etc/init - Configuration of init
+	/etc/inittab - all config info for run levels ( init 6, 0, etc.)
+	sbin/nit - Binary of init
+
+Target Units 
+	command - cat /lib/systemd/system/default.target | tail -n 8
+
+	Systemd target units are a set of value=data pairs to create processes in a set order on the system. But, they are simple to understand at a functional level by understanding the value=data fields within each.
+
+Service Units
+	Service units create processes when called by target units. They, much like target units, have value=data pairs that determine what the unit does.
+
+/etc/environment
+	global variables
+
+/etc/profile 
+	/etc/profile is a script that executes whenever a user logs into an interactive shell on Linux. its functionality depends entirely on the version of Linux being used. Ubuntu Linux uses it to set the BASH shell prompt by executing /etc/bash.bashrc and execute any script named *.sh in /etc/profile.d.
+	 it executes every time a user logs in interactively; therefore, when the file is modified logging out then in again will apply the changes.
+
+
+
+
+	
+	
