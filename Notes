@@ -268,7 +268,17 @@ Service Units
 	/etc/profile is a script that executes whenever a user logs into an interactive shell on Linux. its functionality depends entirely on the version of Linux being used. Ubuntu Linux uses it to set the BASH shell prompt by executing /etc/bash.bashrc and execute any script named *.sh in /etc/profile.d.
 	 it executes every time a user logs in interactively; therefore, when the file is modified logging out then in again will apply the changes.
 
+Windows Process Validity
+	-AcceptEULA
 
+Linux Process Validity
+	ps -elf (snapshot)
+	top, htop (live view)
+
+	For user-space processes /sbin/init ( PID = 1 )
+
+	For kernel-space processes [kthreadd] ( PID = 2 )
+	
 
 
 	
