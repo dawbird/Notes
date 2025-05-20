@@ -279,7 +279,17 @@ Linux Process Validity
 
 	For kernel-space processes [kthreadd] ( PID = 2 )
 	
+	ps -elf --forest #Displays processes in an ASCII tree
 
+	Check status/start/stop/restart a service on sysV
+		service <servicename> status/start/stop/restart
+
+	Check status/start/stop/restart a service on systemd
+		systemctl status <servicename.service> (or pid)
+		systemctl start/stop/restart <servicename.service>
+
+	brucewayne,eowyn,nazgul,tolkienmain
+		
 
 	
 	
