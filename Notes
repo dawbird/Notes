@@ -288,8 +288,37 @@ Linux Process Validity
 		systemctl status <servicename.service> (or pid)
 		systemctl start/stop/restart <servicename.service>
 
-	brucewayne,eowyn,nazgul,tolkienmain
-		
+Windows Auditing And Logging
+	Get-LocalUser | select Name,SID
+	wmic UserAccount get name,sid
 
-	
+	The GUID represents a particular file extension.
+		CEBFF5CD-ACE2-4F4F-9178-9926F41749EA A list of applications, files, links, and other objects that have been accessed
+		F4E57C4B-2036-45F0-A9AB-443BCFE33D9F Lists the Shortcut Links used to start programs
+
+	Location of BAM
+		Show in Reg Edit:
+			HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bam\State\UserSettings #On 1809 and Newer
+			HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bam\UserSettings #On 1803 and below
+
+	Recycle Bin
+		$RXXXXXX - content of deleted files
+		$IXXXXXX - original PATH and name
+
+	Audit Policy
+		auditpol /get /category:* 
+		auditpol /set /subcategory:"File System"
+
+	Event Logs
+		*.evtx files accessed by:
+
+		Windows Event View Application
+
+		Get-Eventlog or Get-WinEvent in Powershell
+
+		wevtutil in Command Prompt
+
+	View Event Logs in Powershell
+		PS C:\> Get-EventLog -LogName System -Newest 10 
+
 	
