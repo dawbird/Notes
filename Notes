@@ -321,4 +321,18 @@ Windows Auditing And Logging
 	View Event Logs in Powershell
 		PS C:\> Get-EventLog -LogName System -Newest 10 
 
+Linux Auditing and Logging
+	 Filtering logs by Boot
+		journalctl --list-boots
+	Filtering Logs by a specific unit
+		journalctl -u ssh.service
+	Filtering Logs since a specific time period
+		journalctl -u ssh.service --since "2 days ago"
+
+	Xpath Syntax: xpath -q -e '//element/@attribute' file.xml
+
+	freeformatter.com
+	xpather.com
+
+	 https://jsonformatter.org/json-pretty-print
 	
