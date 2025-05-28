@@ -335,4 +335,5 @@ Linux Auditing and Logging
 	xpather.com
 
 	 https://jsonformatter.org/json-pretty-print
-	
+
+Filtering for only comments in /etc/passwd : cut -d: -f5 /etc/passwd
