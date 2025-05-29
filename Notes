@@ -337,3 +337,20 @@ Linux Auditing and Logging
 	 https://jsonformatter.org/json-pretty-print
 
 Filtering for only comments in /etc/passwd : cut -d: -f5 /etc/passwd
+
+TEST NOTES
+	Windows Persistence
+		Registry Keys 
+		Scheduled Tasks
+		Powershell Profiles: Get-Content $PROFILE.AllusersAllhosts
+		Malicous Ports: netstat, repeating numbers, sequential numbers
+		Artifacts: BAM, recycle bin, etc
+		Logs
+		Services: Get-Ciminstance Win32_service 
+	Linux Persistence
+		Cron Jobs:  /var/spool/cron, /etc/cron.d, /etc/crontab
+		Processes/Daemons: ps -elf
+		Bash Profiles: .bashrc
+		Ports
+		Logs
+		Symbolic Links: ls -l
