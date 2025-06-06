@@ -3,3 +3,7 @@ Network Recon
     for i in {1..254}; do (ping -c 1 192.168.65.$i | grep "bytes from" &) ; done
     fping -g -a 10.1.0.0/24
     nmap -sn 10.0.0.0/24 (was -sP which is now deprecated)
+    ss -antp/-l
+    find / -name hint* 2>/dev/null
+    find / iname *pattern* 2>/dev/null
+    
