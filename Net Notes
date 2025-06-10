@@ -15661,6 +15661,6 @@ Figure 1: Final Image
 
 For additional verification and to ensure all data was properly copied, md5sum both image files and confirm that they match
 
-
+localhost=target
 
 
