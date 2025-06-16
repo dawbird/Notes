@@ -15663,4 +15663,8 @@ For additional verification and to ensure all data was properly copied, md5sum b
 
 localhost=target
 
+To run snort as a Daemon
+sudo snort -D -c /etc/snort/snort.conf -l /var/log/snort
 
+To run snort against a PCAP
+sudo snort -c /etc/snort/rules/file.rules -r file.pcap
